@@ -35,6 +35,17 @@ func BasicHandler(errorMap func(error) int, handler func(context.Context, Sender
 	})
 }
 
+func RedirectHandler(errorMap func(error) int, handler func(context.Context, Sender) (string, int, error)) func(w http.ResponseWriter, r *http.Request) {
+	return Handler(func(ctx context.Context, s Sender) {
+		url, code, err := handler(ctx, s)
+		if err != nil {
+			s.SendError(errorMap(err), err)
+		}
+
+		s.Redirect(url, code)
+	})
+}
+
 func JsonHandler[T any](errorMap func(error) int, handler func(context.Context, Sender) (T, error)) func(w http.ResponseWriter, r *http.Request) {
 	return Handler(func(ctx context.Context, s Sender) {
 		result, err := handler(ctx, s)

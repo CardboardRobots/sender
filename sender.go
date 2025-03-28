@@ -75,6 +75,35 @@ func (s Sender) SendJson(value any) error {
 	return err
 }
 
+func (s Sender) Redirect(url string, code int) {
+	http.Redirect(s.response, s.request, url, code)
+}
+
+// Redirect with code 301.
+func (s Sender) RedirectMovedPermanently(url string) {
+	http.Redirect(s.response, s.request, url, http.StatusMovedPermanently)
+}
+
+// Redirect with code 302.
+func (s Sender) RedirectFound(url string) {
+	http.Redirect(s.response, s.request, url, http.StatusFound)
+}
+
+// Redirect with code 303.
+func (s Sender) RedirectSeeOther(url string) {
+	http.Redirect(s.response, s.request, url, http.StatusSeeOther)
+}
+
+// Redirect with code 307.
+func (s Sender) RedirectTemporaryRedirect(url string) {
+	http.Redirect(s.response, s.request, url, http.StatusTemporaryRedirect)
+}
+
+// Redirect with code 308.
+func (s Sender) RedirectPermanentRedirect(url string) {
+	http.Redirect(s.response, s.request, url, http.StatusPermanentRedirect)
+}
+
 func (s Sender) SendError(statusCode int, err error) error {
 	s.SetContentTypeJSON()
 
